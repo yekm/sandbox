@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <thread>
+#include <mutex>
 
 template<typename T>
 class ObjectPool
@@ -82,11 +83,28 @@ public:
             m_pool.push_front(std::move(p));
     }
 
-private:
+protected:
     std::mutex m_mutex;
+    std::deque< pointer_type > m_pool;
+
+private:
     create_function_type m_create;
     unsigned int m_initial_size;
-    std::deque< pointer_type > m_pool;
+};
+
+template<typename T>
+class ObjectPoolDrainless : public ObjectPool<T>
+{
+public:
+    typedef ObjectPool<T> base;
+    ObjectPoolDrainless(typename base::create_function_type create, unsigned int initial_size = 0)
+        : ObjectPool<T>(create, initial_size)
+    {}
+    virtual void put(typename base::pointer_type && p)
+    {
+        std::lock_guard<std::mutex> l(base::m_mutex);
+        base::m_pool.push_front(std::move(p));
+    }
 };
 
 #endif // _OBJECTPOOL_H_
