@@ -4,11 +4,15 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 
 template<int N, typename T = unsigned int>
 class NumeralSystem
 {
 public:
+    typedef typename std::vector<T>::iterator iterator;
+    typedef typename std::vector<T>::const_iterator const_iterator;
+
     explicit NumeralSystem(T num)
         : m_numbers()
     {
@@ -30,6 +34,14 @@ public:
         res.resize(m_numbers.size());
         std::transform(m_numbers.rbegin(), m_numbers.rend(), res.begin(), MapNumber<T>());
         return res;
+    }
+    const_iterator begin()
+    {
+        return m_numbers.begin();
+    }
+    const_iterator end()
+    {
+        return m_numbers.end();
     }
 private:
     std::vector<T> m_numbers;
