@@ -1,0 +1,25 @@
+
+
+#define F_START_M 0xf0, 0xf0, 0xf0, 0xcc, 0xf0, 0xf0, 0x90, 0x90
+#define F_STOP_M  0xf0, 0xf0, 0xf0, 0x90, 0xf0, 0xf0, 0xcc, 0xcc
+
+#define F_BEGIN __asm__ volatile ( \
+        ".byte 0xe9\n\t" \
+        ".long 8\n\t" \
+        ".byte 0xf0, 0xf0, 0xf0, 0xcc, 0xf0, 0xf0, 0x90, 0x90\n\t" \
+        );
+
+int fix_if();
+
+#define P(eq, work_true, work_false) F_BEGIN \
+    eq \
+    { \
+        fix_if(); \
+        work_true; \
+    } \
+    else \
+    { \
+        fix_if(); \
+        work_false; \
+    }
+
