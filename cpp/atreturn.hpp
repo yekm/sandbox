@@ -1,12 +1,12 @@
 #include <functional>
 
-class AtReturn
+class atreturn
 {
 public:
-    AtReturn(std::function<void(void)> f)
+    atreturn(std::function<void(void)> f)
         : m_f(f)
     {}
-    ~AtReturn()
+    ~atreturn()
     {
         m_f();
     }
