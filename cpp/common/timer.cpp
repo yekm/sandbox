@@ -53,5 +53,13 @@ Timer & Timer::operator+=(const Timer & a)
     return *this;
 }
 
+srd::string to_str()
+{
+    Timer t;
+    t -= a;
+    std::stringstream ss;
+    ss << t.tv_sec << "." << std::setfill('0') << std::setw(9) << t.tv_nsec;
+    return ss.to_str();
+}
 
 } // namespace common
